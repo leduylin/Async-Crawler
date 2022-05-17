@@ -18,7 +18,6 @@ namespace AsyncCrawler
             try
             {
                 Stopwatch stopwatch = new Stopwatch();
-
                 stopwatch.Start();
 
                 var html = new HtmlWeb();
