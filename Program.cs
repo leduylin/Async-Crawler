@@ -20,6 +20,12 @@ namespace UrlHouses
     {
         static void Main(string[] args)
         {
+            List<String> urls = getAllURL();
+            CrawlData(urls);
+        }
+
+        private static List<String> getAllURL()
+        {
             List<string> listUrl = new List<string>();
             IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(Environment.CurrentDirectory);
             driver.Manage().Window.Minimize();
@@ -66,26 +72,12 @@ namespace UrlHouses
             {
                 Console.WriteLine(e.Message);
             }
-            List<String> url1 = new List<String>();
-            List<String> url2 = new List<String>();
-            for (int i = 0; i < listUrl.Count / 2; i++)
-            {
-                url1.Add(listUrl[i]);
-            }
-            for (int i = listUrl.Count / 2; i < listUrl.Count; i++)
-            {
-                url2.Add(listUrl[i]);
-            }
-            CrawlData(url1, 1);
-            CrawlData(url2, 2);
-
+            return listUrl;
         }
 
         //Crawl all the houses
-        private static async Task CrawlData(List<string> listUrl, int count)
+        private static async Task CrawlData(List<string> listUrl)
         {
-            Console.WriteLine("----------------------------------------------------------");
-            Console.WriteLine("Start thread " + count);
             int dem = 0;
             List<Task<String>> awaitingTasks = new List<Task<string>>();
             for (int i = 0; i < listUrl.Count; ++i)
@@ -96,8 +88,6 @@ namespace UrlHouses
                 await Task.WhenAny(awaitingTasks);
             }
             await Task.WhenAll(awaitingTasks);
-            Console.WriteLine("----------------------------------------------------------");
-            Console.WriteLine("End thread " + count);
         }
 
         //Crawl each house
@@ -106,14 +96,14 @@ namespace UrlHouses
             Console.WriteLine("Running: " + url);
             return await Task.Run(() =>
             {
-                GetInfor(url, dem);
+                GetInforUsingSelenium(url, dem);
                 return "Done";
             });
 
         }
 
         //Get information each house
-        private static void GetInfor(string urlHouse, int dem)
+        private static void GetInforUsingSelenium(string urlHouse, int dem)
         {
             try
             {
