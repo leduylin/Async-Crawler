@@ -25,6 +25,7 @@ namespace UrlHouses
             driver.Manage().Window.Minimize();
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(20);
 
+            // get houses URLs 
             try
             {
                 driver.Url = "https://nha.chotot.com/mua-ban-bat-dong-san";
@@ -69,6 +70,7 @@ namespace UrlHouses
             {
                 Console.WriteLine(e.Message);
             }
+
             CrawlData(listUrl);
         }
 
