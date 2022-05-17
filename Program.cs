@@ -45,14 +45,11 @@ namespace AsyncCrawler
         public static void crawlData(HtmlNodeCollection houses)
         {
 
-            int count = 0;
             foreach (var house in houses)
             {
                 Thread currentThreat = new Thread(()=> getRealEstate(house));
                 currentThreat.Start();
-                count++;
-                if (count == 100)
-                    break;
+                //Thread.Sleep(100);
             }
         }
         public static void getRealEstate (HtmlNode house)
