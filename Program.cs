@@ -20,8 +20,6 @@ namespace UrlHouses
     {
         static void Main(string[] args)
         {
-            var a = DateTime.Now.Ticks;
-
             List<string> listUrl = new List<string>();
             IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(Environment.CurrentDirectory);
             driver.Manage().Window.Minimize();
@@ -71,15 +69,11 @@ namespace UrlHouses
             {
                 Console.WriteLine(e.Message);
             }
-            aaa(listUrl);
-
-            int m = int.Parse(Console.ReadLine());
-            Console.WriteLine(m);
-
-
-
+            CrawlData(listUrl);
         }
-        private static async Task aaa(List<string> listUrl)
+
+        //Crawl all the houses
+        private static async Task CrawlData(List<string> listUrl)
         {
             var a = DateTime.Now.Ticks;
             int dem = 0;
@@ -87,7 +81,7 @@ namespace UrlHouses
             for (int i = 0; i < listUrl.Count(); ++i)
             {
                 dem++;
-                var task = GetUrl(listUrl[i], dem);
+                var task = CrawlAHouse(listUrl[i], dem);
 
                 awaitingTasks.Add(task);
 
@@ -96,18 +90,21 @@ namespace UrlHouses
             }
             await Task.WhenAll(awaitingTasks);
         }
-        private static async Task<string> GetUrl(string url, int dem)
+
+        //Crawl each house
+        private static async Task<string> CrawlAHouse(string url, int dem)
         {
             Console.WriteLine("Running: " + url);
             return await Task.Run(() =>
             {
-                getInfor(url, dem);
-
+                GetInfor(url, dem);
                 return "Done";
             });
 
         }
-        private static void getInfor(string urlHouse, int dem)
+
+        //Get information each house
+        private static void GetInfor(string urlHouse, int dem)
         {
             try
             {
@@ -169,40 +166,3 @@ namespace UrlHouses
 
 
 
-//var a = DateTime.Now.Ticks;
-//
-//String[] urls = new string[] { "a", "b" };
-//for (int i = 0; i < urls.Length; ++i)
-//{
-//    var task = GetUrl(urls[i]);
-
-//    awaitingTasks.Add(task);
-//    if (awaitingTasks.Count == 2)
-//    {
-//        await Task.WhenAny(awaitingTasks);
-
-
-//    }
-
-//}
-//await Task.WhenAll(awaitingTasks);
-//Console.WriteLine(DateTime.Now.Ticks - a);
-
-//static async Task<string> GetUrl(string url)
-//{
-//    Console.WriteLine("Running: " + url);
-//    return await Task.Run(() =>
-//    {
-//        long i = (long)2e8;
-
-//        while (i-- > 0)
-//        {
-//            if (i % 100000000 == 0)
-//            {
-//                Console.WriteLine(url + " " + i);
-//            }
-//        }
-//        return "a";
-//    });
-
-//}
