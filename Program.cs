@@ -25,6 +25,7 @@ namespace UrlHouses
             driver.Manage().Window.Minimize();
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(20);
 
+            int countHouse = 0;
             // get houses URLs 
             try
             {
@@ -48,15 +49,10 @@ namespace UrlHouses
                                 listUrl.Add(urlHouse);
                             }
                             ccountHouse++;
-                            if (ccountHouse > 10)
-                            {
-                                break;
-                            }
+
                         }
-
                         totalOfPages++;
-
-                        if (totalOfPages > 2)
+                        if (totalOfPages > 5)
                         {
                             break;
                         }
@@ -70,27 +66,38 @@ namespace UrlHouses
             {
                 Console.WriteLine(e.Message);
             }
+            List<String> url1 = new List<String>();
+            List<String> url2 = new List<String>();
+            for (int i = 0; i < listUrl.Count / 2; i++)
+            {
+                url1.Add(listUrl[i]);
+            }
+            for (int i = listUrl.Count / 2; i < listUrl.Count; i++)
+            {
+                url2.Add(listUrl[i]);
+            }
+            CrawlData(url1, 1);
+            CrawlData(url2, 2);
 
-            CrawlData(listUrl);
         }
 
         //Crawl all the houses
-        private static async Task CrawlData(List<string> listUrl)
+        private static async Task CrawlData(List<string> listUrl, int count)
         {
-            var a = DateTime.Now.Ticks;
+            Console.WriteLine("----------------------------------------------------------");
+            Console.WriteLine("Start thread " + count);
             int dem = 0;
             List<Task<String>> awaitingTasks = new List<Task<string>>();
-            for (int i = 0; i < listUrl.Count(); ++i)
+            for (int i = 0; i < listUrl.Count; ++i)
             {
                 dem++;
                 var task = CrawlAHouse(listUrl[i], dem);
-
                 awaitingTasks.Add(task);
-
                 await Task.WhenAny(awaitingTasks);
-
             }
             await Task.WhenAll(awaitingTasks);
+            Console.WriteLine("----------------------------------------------------------");
+            Console.WriteLine("End thread " + count);
         }
 
         //Crawl each house
